@@ -1,0 +1,18 @@
+longtable is a jQuery plugin to help ease navigation of long HTML tables
+
+Goals
+=====
+
+ - minimalistic
+ - all controls rendered inside the table itself (currently the tfoot)
+ - no extra CSS required
+
+Features
+========
+
+ - paging
+
+How to Use
+==========
+
+$('#your-table').longtable();
