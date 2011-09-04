@@ -1,18 +1,29 @@
-longtable is a jQuery plugin to help ease navigation of long HTML tables
-
-Goals
-=====
-
- - minimalistic
- - all controls rendered inside the table itself (currently the tfoot)
- - no extra CSS required
+longtable - a minimalistic javascript <table> pager (jQuery plugin)
 
 Features
 ========
 
  - paging
+ - minimal code
+ - all controls rendered inside the table itself (currently the tfoot)
 
 How to Use
 ==========
 
 $('#your-table').longtable();
+
+Functions
+=========
+
+ gotoPage(n) - jump to the given page number
+
+Events
+======
+
+ 'longtable.pageChange' - triggered when the page changes
+
+Notes
+=====
+
+ - Rows to be paged must be in the <tbody>.
+ - Does not support adding/removing table rows.

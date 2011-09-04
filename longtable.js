@@ -6,19 +6,10 @@
 // Requirements:
 //  * jQuery >= 1.4.3
 
-// Only works for a single static table per page.
-
 (function ($) {
-  var settings = {};
-  var defaults = {
-    'perPage': 10
-  };
-  var table;
-  var numPages = 0;
-  var currentPage = 1;
-  var pagerControls = null;
+  var defaults = {'perPage': 10};
 
-  function showRows(offset, n) {
+  function showRows(table, offset, n) {
     // Naive and inefficient.
     table.find('tbody tr').each(function (i, row) {
       if (i >= offset && i < offset + n) {
@@ -29,62 +20,68 @@
     });
   }
 
-  function pageLink(n, text) {
-    return '<a class="page" href="#pg' + n + '">' + (text || n) + '</a>';
-  }
-
-  function goToPage(n) {
-    currentPage = n;
-    updateControls();
-    showRows((currentPage - 1) * settings.perPage, settings.perPage);
-  }
-
-  function updateControls() {
-    var prev = (currentPage === 1)        ? '' : pageLink(currentPage - 1, '◀ prev');
-    var next = (currentPage === numPages) ? '' : pageLink(currentPage + 1, 'next ▶');
-    var pages = '';
-    var start = Math.max(1, Math.min(currentPage - 2, numPages - 4));
-    var end = Math.min(start + 4, numPages);
-    if (start > 1) {
-      pages += pageLink(1) + ' <span class="page">…</span> ';
-    }
-    for (var i = start; i <= end; i++) {
-       if (i === currentPage) {
-         pages += '<span class="page">' + i + '</span> ';
-       } else {
-         pages += pageLink(i) + ' ';
-       }
-    }
-    if (end < numPages) {
-      pages += '<span class="page">…</span> ' + pageLink(numPages);
-    }
-    pagerControls.empty().append('<span style="float: left;">' + prev + '</span> <span class="pages">' + pages + '</span> <span style="float: right;">' + next + '</span>');
-  }
-
   $.fn.longtable = function (options) {
-    table = this;
-    settings = $.extend(defaults, options || {});
+    var settings = $.extend(defaults, options || {});
+    var table = this;
+    var nCols = table.find('tr')[0].cells.length;
+    var nRows = table.find('tbody tr').length;
+    var nPages = Math.ceil(nRows / settings.perPage);
 
+    var pagingControls = $('<th class="paging-controls" colspan="' + nCols + '"></th>');
+    var prev = $('<a class="page prev" href=""></a>');
+    var next = $('<a class="page next" href=""></a>');
+    var leftElide = $('<span class="elide"></span>');
+    var rightElide = $('<span class="elide"></span>');
+    var pages = [];
+    for (var i = 1; i <= nPages; i++) {
+      pages.push($('<a class="page direct" href="" page="' + i + '">' + i + '</a>'));
+    }
+
+    pagingControls.append(prev).append(pages[0]).append(leftElide);
+    for (var i = 2; i < nPages; i++) {
+      pagingControls.append(' ').append(pages[i - 1]).append(' ');
+    }
+    pagingControls.append(rightElide).append(pages[pages.length - 1]).append(next);
     // Put paging controls in the tfoot.
     var tfoot = table.find('tfoot');
     if (tfoot.length === 0) {
       tfoot = $('<tfoot></tfoot>').appendTo(table);
     }
-    var nColumns = table.find('tr')[0].cells.length;
-    var nRows = table.find('tbody tr').length;
-    numPages = Math.ceil(nRows / settings.perPage);
-    pagerControls = $('<th class="pager-controls" style="text-align: center;" colspan="' + nColumns + '"></th>');
-    $('<tr></tr>').append(pagerControls).appendTo(tfoot);
-    pagerControls.delegate('a', 'click', function () {
-      goToPage(parseInt(/\d+/.exec($(this).attr('href'))[0], 10));
+    $('<tr></tr>').append(pagingControls).appendTo(tfoot);
+
+    table.gotoPage = function (n) {
+      n = Math.max(Math.min(n, nPages), 1);
+      var start = Math.max(1, Math.min(n - 2, nPages - 4));
+      var end = Math.min(start + 4, nPages);
+      if (n === 1) {
+        prev.css('visibility', 'hidden');
+      } else {
+        prev.css('visibility', '').attr('page', n - 1);
+      }
+      if (n === nPages) {
+        next.css('visibility', 'hidden');
+      } else {
+        next.css('visibility', '').attr('page', n + 1);
+      }
+      start === 1 ? leftElide.hide() : leftElide.show();
+      end === nPages ? rightElide.hide() : rightElide.show();
+      for (var i = 2; i < pages.length; i++) {
+        i >= start && i <= end ? pages[i - 1].show() : pages[i - 1].hide();
+      }
+      for (var i = 0; i < pages.length; i++) {
+        (i + 1) === n ? pages[i].removeAttr('href') : pages[i].attr('href', '');
+      }
+      showRows(table, (n - 1) * settings.perPage, settings.perPage);
+      table.trigger('longtable.pageChange', [n]);
+    };
+
+    pagingControls.delegate('a', 'click', function () {
+      table.gotoPage(parseInt($(this).attr('page'), 10));
+      return false;
     });
-    var pgHash = /#pg(\d+)/.exec(window.location.hash);
-    if (pgHash) {
-      goToPage(parseInt(pgHash[1], 10));
-    } else {
-      goToPage(1);
-    }
-    updateControls();
+
+    table.gotoPage(1);
+
     return this;
   };
 })(jQuery);

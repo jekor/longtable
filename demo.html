@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>longtable Demo</title>
+  <style type="text/css">
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: right;
+  border: 1px solid black;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.paging-controls {
+  text-align: center;
+}
+
+.paging-controls a {
+  text-decoration: none;
+}
+
+.paging-controls a:visited {
+  color: blue;
+}
+
+.paging-controls .prev {
+  float: left;
+}
+
+.paging-controls .prev:before {
+  content: "< prev";
+}
+
+.paging-controls .next {
+  float: right;
+}
+
+.paging-controls .next:after {
+  content: "next >";
+}
+
+.paging-controls .elide:before {
+  content: " ... ";
+}
+  </style>
+</head>
+<body>
+  <!-- Placeholder table that will be populated with random data. -->
+  <table>
+    <thead>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <script src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+  <script src="longtable.js"></script>
+  <script type="text/javascript">
+// Build a random table.
+var columns = 2 + Math.floor(Math.random() * 4);
+var rows = 30 + Math.floor(Math.random() * 140);
+var thead = $('thead');
+var row = $('<tr><th>Row #</th></tr>').appendTo('thead');
+for (var j = 0; j < columns; j++) {
+  row.append('<th>Random Column ' + (j + 1) + '</th>');
+}
+for (var i = 1; i <= rows; i++) {
+  row = $('<tr><th>' + i + '</th></tr>').appendTo('tbody');
+  for (var j = 0; j < columns; j++) {
+    row.append('<td>' + Math.floor(Math.random() * 1000000) + '</td>');
+  }
+}
+
+// Check the URL for a hash of where we left off.
+var startPage = 1;
+var pageHash = /^#page(\d+)$/.exec(window.location.hash);
+if (pageHash) {
+  startPage = parseInt(pageHash[1], 10);
+}
+
+// Longtable it.
+$('table').longtable().bind('longtable.pageChange', function (_, n) {
+  window.location.hash = 'page' + n;
+}).gotoPage(startPage);
+  </script>
+</body>
+</html>
