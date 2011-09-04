@@ -1,4 +1,4 @@
-// longtable 0.1 - a minimalistic table pager for jQuery
+// longtable 1.0 - a minimalistic table pager for jQuery
 
 // Copyright 2011 Chris Forno
 // Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php).
