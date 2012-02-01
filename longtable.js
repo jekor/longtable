@@ -1,6 +1,6 @@
-// longtable 1.0 - a minimalistic table pager for jQuery
+// longtable 1.1 - a minimalistic table pager for jQuery
 
-// Copyright 2011 Chris Forno
+// Copyright 2011, 2012 Chris Forno
 // Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php).
 
 // Requirements:
@@ -10,14 +10,7 @@
   var defaults = {'perPage': 10};
 
   function showRows(table, offset, n) {
-    // Naive and inefficient.
-    table.find('tbody tr').each(function (i, row) {
-      if (i >= offset && i < offset + n) {
-        $(row).show();
-      } else {
-        $(row).hide();
-      }
-    });
+    table.find('tbody tr').hide().slice(offset, offset + n).show();
   }
 
   $.fn.longtable = function (options) {
