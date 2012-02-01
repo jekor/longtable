@@ -20,7 +20,7 @@ Functions
 Events
 ======
 
- 'longtable.pageChange' - triggered when the page changes
+ 'longtable.pageChange' - triggered when the page changes (passes the page number)
 
 Notes
 =====
