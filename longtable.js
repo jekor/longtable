@@ -16,7 +16,10 @@
   $.fn.longtable = function (options) {
     var settings = $.extend(defaults, options || {});
     var table = this;
-    var nCols = table.find('tr')[0].cells.length;
+    var nCols = 0;
+    $(table.find('tbody tr')[0].cells).each(function (_, c) {
+      nCols += $(c).attr('colspan') ? parseInt($(c).attr('colspan'), 10) : 1;
+    });
     var nRows = table.find('tbody tr').length;
     var nPages = Math.ceil(nRows / settings.perPage);
 
