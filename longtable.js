@@ -7,7 +7,7 @@
 //  * jQuery >= 1.4.3
 
 (function ($) {
-  var defaults = {'perPage': 10};
+  var defaults = {'perPage': 10, 'startPage': 1};
 
   function showRows(table, offset, n) {
     table.find('tbody tr').hide().slice(offset, offset + n).show();
@@ -76,7 +76,7 @@
       return false;
     });
 
-    table.gotoPage(1);
+    table.gotoPage(settings.startPage);
 
     return this;
   };

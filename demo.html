@@ -74,16 +74,16 @@ for (var i = 1; i <= rows; i++) {
 }
 
 // Check the URL for a hash of where we left off.
-var startPage = 1;
+var options = {};
 var pageHash = /^#page(\d+)$/.exec(window.location.hash);
 if (pageHash) {
-  startPage = parseInt(pageHash[1], 10);
+  options.startPage = parseInt(pageHash[1], 10);
 }
 
 // Longtable it.
-$('table').longtable().bind('longtable.pageChange', function (_, n) {
+$('table').longtable(options).bind('longtable.pageChange', function (_, n) {
   window.location.hash = 'page' + n;
-}).gotoPage(startPage);
+});
   </script>
 </body>
 </html>
