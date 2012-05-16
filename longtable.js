@@ -30,7 +30,7 @@
     var rightElide = $('<span class="elide"></span>');
     var pages = [];
     for (var i = 1; i <= nPages; i++) {
-      pages.push($('<a class="page direct" href="" page="' + i + '">' + i + '</a>'));
+      pages.push($('<a class="page direct" href="" page="' + i + '" style="display: none">' + i + '</a>'));
     }
 
     pagingControls.append(prev).append(pages[0]).append(leftElide);
@@ -61,9 +61,12 @@
       }
       start === 1 ? leftElide.hide() : leftElide.show();
       end === nPages ? rightElide.hide() : rightElide.show();
-      for (var i = 2; i < pages.length; i++) {
-        i >= start && i <= end ? pages[i - 1].show() : pages[i - 1].hide();
+      pagingControls.find('a.page.direct').filter(':visible').hide();
+      for (var i = start; i <= end; i++) {
+        pages[i - 1].show();
       }
+      if (start > 1) pages[0].show();
+      if (end < nPages) pages[pages.length - 1].show();
       for (var i = 0; i < pages.length; i++) {
         (i + 1) === n ? pages[i].removeAttr('href') : pages[i].attr('href', '');
       }
