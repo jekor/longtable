@@ -16,12 +16,15 @@
   $.fn.longtable = function (options) {
     var settings = $.extend(defaults, options || {});
     var table = this;
-    var nCols = 0;
-    $(table.find('tbody tr')[0].cells).each(function (_, c) {
-      nCols += $(c).attr('colspan') ? parseInt($(c).attr('colspan'), 10) : 1;
-    });
     var nRows = table.find('tbody tr').length;
-    var nPages = Math.ceil(nRows / settings.perPage);
+    var nPages = Math.max(1, Math.ceil(nRows / settings.perPage));
+    var nCols = 0;
+    // Determine the number of columns in the table.
+    if (nRows) {
+      $(table.find('tbody tr')[0].cells).each(function (_, c) {
+        nCols += $(c).attr('colspan') ? parseInt($(c).attr('colspan'), 10) : 1;
+      });
+    }
 
     var pagingControls = $('<th class="paging-controls" colspan="' + nCols + '"></th>');
     var prev = $('<a class="page prev" href=""></a>');
@@ -61,6 +64,7 @@
       }
       start === 1 ? leftElide.hide() : leftElide.show();
       end === nPages ? rightElide.hide() : rightElide.show();
+      if (nPages <= 1) return;
       pagingControls.find('a.page.direct').filter(':visible').hide();
       for (var i = start; i <= end; i++) {
         pages[i - 1].show();
