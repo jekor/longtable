@@ -1,4 +1,4 @@
-longtable - a minimalistic javascript <table> pager - v1.2
+longtable - a minimalistic javascript `<table>` pager - v1.2
 
 Demo at http://www.minjs.com/#longtable
 
