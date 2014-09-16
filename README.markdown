@@ -1,36 +1,32 @@
-longtable - a minimalistic javascript `<table>` pager - v1.2
+# longtable - a Minimalistic JavaScript Table Pager
 
 Demo at http://www.minjs.com/#longtable
 
-# Features
+## Features
 
- - paging
- - minimal code
- - all controls rendered inside the table itself (currently the tfoot)
+* paging
+* minimal code
+* all controls rendered inside the table itself (currently the tfoot)
 
-# How to Use
+## How to Use
 
-```
+```JavaScript
 $('#your-table').longtable();
 ```
 
-# Functions
+## Functions
 
- `gotoPage(n)` - jump to the given page number
+* `gotoPage(n)` - jump to the given page number
 
-# Events
+## Events
 
- `longtable.pageChange` - triggered when the page changes (passes the page number)
+* `longtable.pageChange` - triggered when the page changes (passes the page number)
 
-# Notes
+## Notes
 
- - Rows to be paged must be in the `<tbody>`.
- - Does not support adding/removing table rows.
+* Rows to be paged must be in the `<tbody>`.
+* Does not support adding/removing table rows.
 
-# Requirements:
+## Requirements:
 
 jQuery >= 1.4.3
-
-# License
-
-Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php).
