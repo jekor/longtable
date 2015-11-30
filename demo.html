@@ -42,47 +42,53 @@ th, td {
   content: "next >";
 }
 
-.paging-controls .elide:before {
+.paging-controls .elipsis:before {
   content: " ... ";
 }
   </style>
 </head>
 <body>
-  <!-- Placeholder table that will be populated with random data. -->
-  <table>
-    <thead>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-  <script src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
   <script src="longtable.js"></script>
   <script type="text/javascript">
 // Build a random table.
 var columns = 2 + Math.floor(Math.random() * 4);
 var rows = 30 + Math.floor(Math.random() * 140);
-var thead = $('thead');
-var row = $('<tr><th>Row #</th></tr>').appendTo('thead');
+var table = document.createElement('table');
+var header = document.createElement('tr');
+var th1 = document.createElement('th');
+th1.appendChild(document.createTextNode('Row #'));
+header.appendChild(th1);
 for (var j = 0; j < columns; j++) {
-  row.append('<th>Random Column ' + (j + 1) + '</th>');
+  var th = document.createElement('th');
+  th.appendChild(document.createTextNode('Random Column ' + (j + 1)));
+  header.appendChild(th);
 }
+table.createTHead().appendChild(header);
+var tbody = document.createElement('tbody');
 for (var i = 1; i <= rows; i++) {
-  row = $('<tr><th>' + i + '</th></tr>').appendTo('tbody');
+  var row = tbody.insertRow();
+  var th = row.insertCell();
+  th.appendChild(document.createTextNode(i));
+                               
   for (var j = 0; j < columns; j++) {
-    row.append('<td>' + Math.floor(Math.random() * 1000000) + '</td>');
+    var td = row.insertCell();
+    td.appendChild(document.createTextNode(Math.floor(Math.random() * 1000000)));
   }
 }
+table.appendChild(tbody);
+document.body.appendChild(table);
 
 // Check the URL for a hash of where we left off.
 var options = {};
 var pageHash = /^#page(\d+)$/.exec(window.location.hash);
 if (pageHash) {
-  options.startPage = parseInt(pageHash[1], 10);
+  options.startPage = Math.min(parseInt(pageHash[1], 10), Math.ceil(rows / 10));
 }
 
 // Longtable it.
-$('table').longtable(options).bind('longtable.pageChange', function (_, n) {
-  window.location.hash = 'page' + n;
+longtable(table, options);
+table.addEventListener('longtable.pageChange', function (e) {
+  window.location.hash = 'page' + e.detail.page;
 });
   </script>
 </body>
