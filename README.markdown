@@ -6,7 +6,7 @@ Demo at http://www.minjs.com/#longtable
 
 * paging
 * minimal code
-* all controls rendered inside the table itself (currently the <tfoot>)
+* all controls rendered inside the table itself (currently the `<tfoot>`)
 * no library dependencies
 
 ## How to Use
